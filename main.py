@@ -35,7 +35,7 @@ async def on_message(message):
 
     if "shit" in message.content.lower():
         await message.delete()
-        await message.channel.send(f"{message.author.mention} -  dont use that word!")
+        await message.channel.send(f"{message.author.mention} -   dont use that word!")
 
     await bot.process_commands(message)
 
@@ -126,21 +126,22 @@ async def buscar_estadisticas(ctx, equipo: str):
                             row[1] = lines[i + 1]
                         table_data.append(tuple(row))
 
-            total_goles = goles_area + goles_fuera_area
+        total_goles = goles_area + goles_fuera_area
 
-            if table_data:
-                table_string = f"**Estadísticas de Goles ({total_goles} Totales) para {equipo}:**\n"
-                table_string += "```\n"  # Iniciar de bloque
-                table_string += "|         Tipo de Gol         | Porcentaje | Goles |\n"
-                table_string += "|-----------------------------|------------|-------|\n"
-                for row in table_data:
-                    description, percentage, goals = row
-                    table_string += f"| {description:<27} | {percentage:<10} | {goals:<5} |\n"
-                table_string += "```"  # Cierre de bloque
-                await ctx.send(table_string)
-            else:
-                await ctx.send(f"No se encontraron estadísticas de goles formateables para '{equipo}'.")
+        if table_data:
+            table_string = f"**Estadísticas de Goles ({total_goles} Totales) para {equipo}:**\n"
+            table_string += "```\n"  # Iniciar de bloque
+            table_string += "|         Tipo de Gol         | Porcentaje | Goles |\n"
+            table_string += "|-----------------------------|------------|-------|\n"
+            for row in table_data:
+                description, percentage, goals = row
+                table_string += f"| {description:<27} | {percentage:<10} | {goals:<5} |\n"
+            table_string += "```"  # Cierre de bloque
+            await ctx.send(table_string)
         else:
+            await ctx.send(f"No se encontraron estadísticas de goles formateables para '{equipo}'.")
+
+        if not divs: # Ahora verificamos si 'divs' estaba vacío para enviar el otro mensaje
             await ctx.send(f"No se encontraron secciones de estadísticas de goles para '{equipo}'.")
 
     except requests.exceptions.RequestException as e:
@@ -158,7 +159,7 @@ async def dolarblue(ctx):
         fecha_actualizacion_str = data.get("fechaActualizacion")
         fecha_formateada = ""
         if fecha_actualizacion_str:
-            fecha_formateada = datetime.fromisoformat(fecha_actualizacion_str.replace('Z', '+00:00')).strftime('%Y-%m-%d %H:%M:%S')
+            fecha_formateada = datetime.fromisoformat(fecha_actualizacion_str.replace('Z', '+00:00')).strftime('%Y-%m-%d') # Solo la fecha
         compra = data.get("compra")
         venta = data.get("venta")
 
@@ -172,9 +173,16 @@ async def dolarblue(ctx):
         tabla += "```"
         await ctx.send(tabla)
 
+        print("Información del Dólar Blue (Consola):")
+        print(f"Fecha de Actualización: {fecha_formateada}") # Solo la fecha
+        print(f"Compra: ${compra}")
+        print(f"Venta: ${venta}")
+
     except requests.exceptions.RequestException as e:
         await ctx.send(f"Error al obtener la información del dólar blue: {e}")
+        print(f"Error al obtener la información del dólar blue (Consola): {e}")
     except Exception as e:
         await ctx.send(f"Ocurrió un error al procesar la información del dólar blue: {e}")
+        print(f"Ocurrió un error al procesar la información del dólar blue (Consola): {e}")
 
 bot.run(token, log_handler=handler, log_level=logging.DEBUG)
