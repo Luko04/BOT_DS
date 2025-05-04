@@ -4,9 +4,13 @@ El proyecto se ha desarrollado integrando diversas herramientas y servicios para
 Para la consulta de estadísticas de fútbol, se realiza un web scraping selectivo de fuentes de datos deportivas utilizando la librería Beautiful Soup 4. 
 Por otro lado, la obtención del valor del dólar blue se logra mediante la integración con una API pública que proporciona esta información en tiempo real.
 Requerimientos: pip install beautifulsoup4, pip install python-dotenv, pip install discord.py
-```bash
+```
 pip install beautifulsoup4
+```
+```
 pip install python-dotenv
+```
+```
 pip install discord.py
 ```
 Tambien requiere enlazar el token del bot de discord en un .env, el cual no subi porque se puede utilizar maliciosamente.
